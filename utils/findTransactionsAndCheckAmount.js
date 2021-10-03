@@ -1,4 +1,4 @@
-const {Transaction} = require("../../models");
+const {Transaction} = require("../models");
 
 const findTransactionsAndCheckAmount = async (userId, amount, res) => {
     try {
