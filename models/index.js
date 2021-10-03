@@ -5,7 +5,12 @@ const {
   joiSchemaVerifyEmail,
 } = require("./user");
 
-const Transaction = require('./transaction');
+const {
+  Transaction,
+  joiSchemaAddIncome,
+  joiSchemaAddExpenses,
+  joiSchemaRenewBalance,
+} = require("./transaction");
 
 module.exports = {
   User,
@@ -13,4 +18,7 @@ module.exports = {
   joiSchemaChangeUser,
   joiSchemaVerifyEmail,
   Transaction,
+  joiSchemaAddIncome,
+  joiSchemaAddExpenses,
+  joiSchemaRenewBalance,
 };
