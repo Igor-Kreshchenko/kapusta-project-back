@@ -6,17 +6,13 @@ const addIncome = async (req, res, next) => {
     const {date = today, description = `Income added ${today.toLocaleDateString()}.`, category = "Доп. доход", amount} = req.body;
     const {_id: userId} = req.user;
 
-    try {
-        const userTransactions = await findTransactionsAndCheckAmount(userId, amount, res);
+    const userTransactions = await findTransactionsAndCheckAmount(userId, amount, res);
 
-        const {_id: transactionId, balance, income} = userTransactions;
-        const newBalance = +balance + +amount;
-        const newIncome = [...income, {date, description, category, amount}]
+    const {_id: transactionId, balance, income} = userTransactions;
+    const newBalance = +balance + +amount;
+    const newIncome = [...income, {date, description, category, amount}]
         
-        await Transaction.findByIdAndUpdate(transactionId, {balance: newBalance, income: newIncome});
-    } catch (error) {
-        next(error);
-    };
+    await Transaction.findByIdAndUpdate(transactionId, {balance: newBalance, income: newIncome});
 };
 
 module.exports = addIncome;
