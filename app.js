@@ -1,6 +1,9 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const boolParser = require("express-query-boolean");
+// const transactionRouter = require("./routes/transaction");
+const usersRouter = require("./routes/users");
 
 const app = express();
 
@@ -10,6 +13,9 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
+app.use(boolParser());
+app.use("/api/users", usersRouter);
+// app.use("/api/transaction", transactionsRouter);
 
 app.use((_, res) => {
   res.status(404).json({ status: "error", code: 404, message: "Not found" });
