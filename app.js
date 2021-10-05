@@ -5,7 +5,7 @@ const boolParser = require("express-query-boolean");
 // const transactionRouter = require("./routes/transaction");
 const usersRouter = require("./routes/users");
 
-const {transactionsRouter} = require("./routes/api")
+const { transactionsRouter } = require("./routes/api");
 
 const app = express();
 
