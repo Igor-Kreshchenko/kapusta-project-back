@@ -1,8 +1,9 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
-
-const {transactionsRouter} = require("./routes/api")
+const boolParser = require("express-query-boolean");
+const usersRouter = require("./routes/users");
+const { transactionsRouter } = require("./routes/api");
 
 const app = express();
 
@@ -12,7 +13,8 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
-
+app.use(boolParser());
+app.use("/api/users", usersRouter);
 app.use("api/transactions", transactionsRouter);
 
 app.use((_, res) => {
