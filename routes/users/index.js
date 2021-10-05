@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const ctrl = require("../../controllers/users");
+const ctrl = require("../../controllers/users/users");
 const guard = require("../../helpers/guard");
 const { validationCreateUser, validationLoginUser } = require("./validation");
 
