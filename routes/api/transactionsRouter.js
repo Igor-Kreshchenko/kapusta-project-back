@@ -11,6 +11,6 @@ transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
 
 transactionsRouter.patch('/balance', controllerWrapper(ctrl.renewBalance));
 
-transactionsRouter.delete('/:operationType/:operationId', controllerWrapper(ctrl.deleteTransaction));
+transactionsRouter.patch('/:operationType/:operationId', controllerWrapper(ctrl.deleteOperationFromTransactions));
 
 module.exports = transactionsRouter;

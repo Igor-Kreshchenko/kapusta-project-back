@@ -1,11 +1,11 @@
 const addIncome = require("./addIncome");
 const addExpense = require("./addExpense");
 const renewBalance = require("./renewBalance");
-const deleteTransaction = require("./deleteTransaction")
+const deleteOperationFromTransactions = require("./deleteOperationFromTransactions")
 
 module.exports = {
     addIncome,
     addExpense,
     renewBalance,
-    deleteTransaction
+    deleteOperationFromTransactions
 }
