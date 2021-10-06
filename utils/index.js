@@ -1,7 +1,9 @@
-const findTransactionsAndCheckAmount = require("./findTransactionsAndCheckAmount");
 const findTransactions = require("./findTransactions");
+const addTransaction = require("./addTransaction");
+const getTransactions = require("./getTransactions");
 
 module.exports = {
-    findTransactionsAndCheckAmount,
-    findTransactions
+    findTransactions,
+    addTransaction,
+    getTransactions,
 }
