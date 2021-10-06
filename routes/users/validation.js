@@ -23,15 +23,6 @@ const schemaLogin = Joi.object({
     .required(),
 });
 
-const schemaVerify = Joi.object({
-  email: Joi.string()
-    .email({
-      minDomainSegments: 2,
-      tlds: { allow: ["com", "net", "ua", "ru"] },
-    })
-    .required(),
-});
-
 const validate = async (schema, obj, next) => {
   try {
     await schema.validateAsync(obj);
@@ -51,8 +42,5 @@ module.exports = {
   },
   validationLoginUser: async (req, res, next) => {
     return await validate(schemaLogin, req.body, next);
-  },
-  validationVerifyUser: async (req, res, next) => {
-    return await validate(schemaVerify, req.body, next);
   },
 };
