@@ -2,7 +2,7 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const boolParser = require("express-query-boolean");
-const usersRouter = require("./routes/users");
+const { usersRouter } = require("./routes/api");
 const { transactionsRouter } = require("./routes/api");
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(boolParser());
 app.use("/api/users", usersRouter);
-app.use("api/transactions", transactionsRouter);
+app.use("/api/transactions", transactionsRouter);
 
 app.use((_, res) => {
   res.status(404).json({ status: "error", code: 404, message: "Not found" });

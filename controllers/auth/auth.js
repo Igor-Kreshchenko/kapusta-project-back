@@ -1,12 +1,13 @@
-const Users = require("../../models/users");
+const { Users } = require("../../models");
 const HttpCode = require("../../helpers/constants");
+const { UserRepo } = require("../../repositories");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const signup = async (req, res, next) => {
   const { email } = req.body;
-  const user = await Users.findByEmail(email);
+  const user = await Users.findOne({ email });
   if (user) {
     return res.status(HttpCode.CONFLICT).json({
       status: "error",
@@ -37,7 +38,7 @@ const signup = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await Users.findByEmail(email);
+  const user = await Users.findOne({ email });
   const isValidPassword = await user?.validPassword(password);
   if (!user || !isValidPassword) {
     return res.status(HttpCode.UNAUTHORIZED).json({

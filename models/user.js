@@ -20,6 +20,11 @@ const UserSchema = Schema(
       type: String,
       required: [true, "Password is required"],
     },
+    subscription: {
+      type: String,
+      enum: ["starter", "pro", "business"],
+      default: "starter",
+    },
     avatarUrl: {
       type: String,
       default: () => {
@@ -34,13 +39,22 @@ const UserSchema = Schema(
       type: String,
       required: [true, "Verify token is required"],
     },
-    accessToken: {
+    token: {
       type: String,
       default: null,
     },
   },
   { versionKey: false, timestamps: true }
 );
+
+const joiUserSchema = Joi.object({
+  password: Joi.string().required(),
+  email: Joi.string()
+    .pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
+    .required(),
+  subscription: Joi.string(),
+  token: Joi.string(),
+});
 
 const joiSchemaAddUser = Joi.object({
   password: Joi.string().required(),
@@ -62,6 +76,7 @@ const User = model("user", UserSchema);
 
 module.exports = {
   User,
+  joiUserSchema,
   joiSchemaAddUser,
   joiSchemaChangeUser,
   joiSchemaVerifyEmail,

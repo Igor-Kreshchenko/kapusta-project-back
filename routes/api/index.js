@@ -1,6 +1,6 @@
 const transactionsRouter = require("./transactionsRouter");
-const users = require("../users");
+const usersRouter = require("./auth");
 module.exports = {
   transactionsRouter,
-  users,
+  usersRouter,
 };
