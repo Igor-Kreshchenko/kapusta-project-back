@@ -2,7 +2,7 @@ const { Transaction } = require("../../models")
 const { findTransactions } = require("../../utils")
 const createError = require('http-errors')
 
-const deleteTransaction = async (req, res, next) => {
+const deleteOperationFromTransactions = async (req, res, next) => {
     const { operationType, operationId } = req.params
     if ((!operationType) || (!operationId)) {
         throw new createError(400, 'Transaction type and transaction id must be present')
@@ -11,7 +11,7 @@ const deleteTransaction = async (req, res, next) => {
         throw new createError(400, 'Transaction type must be "income" or "expenses"')
     }
     const { _id: userId } = req.user
-    const userTransactions = await findTransactions(userId, res)
+    const userTransactions = await findTransactions(userId)
     const { _id: transactionId } = userTransactions
     let balance = userTransactions.balance
     let elem
@@ -37,4 +37,4 @@ const deleteTransaction = async (req, res, next) => {
     res.json(elem)
  }
 
-module.exports = deleteTransaction
+module.exports = deleteOperationFromTransactions

@@ -3,11 +3,11 @@ const ctrl = require("../../controllers/transactions");
 const transactionsRouter = express.Router();
 const { controllerWrapper } = require("../../middlewares")
 
-// router.get('/', ctrl.getAllBanks);
+router.get('/:operationType', ctrl.getOperations);
 
-transactionsRouter.patch('/incomes', controllerWrapper(ctrl.addIncome));
+transactionsRouter.patch('/transactions/:operationType', controllerWrapper(ctrl.addOperations));
 
-transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
+// transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
 
 transactionsRouter.patch('/balance', controllerWrapper(ctrl.renewBalance));
 
