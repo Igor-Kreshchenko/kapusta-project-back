@@ -1,4 +1,7 @@
-const { signup, login, logout, current } = require("./auth");
+const signup = require("./signup");
+const login = require("./login");
+const logout = require("./logout");
+const current = require("./current");
 
 module.exports = {
   signup,
