@@ -1,5 +1,4 @@
 const { getCurrentUser } = require("../../repositories/users");
-
 const HttpCode = require("../../helpers/constants");
 
 const current = async (req, res, next) => {

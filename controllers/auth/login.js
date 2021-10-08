@@ -5,10 +5,11 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
   const user = await findByEmail(email);
-  const isValidPassword = await user?.validPassword(password);
-  if (!user || !isValidPassword) {
+  //   const isValidPassword = await user?.validPassword(password);
+  //   if (!user || !isValidPassword) {
+  if (!user) {
     return res.status(HttpCode.UNAUTHORIZED).json({
       status: "error",
       code: HttpCode.UNAUTHORIZED,
