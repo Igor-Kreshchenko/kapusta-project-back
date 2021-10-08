@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const gravatar = require("gravatar");
 const Joi = require("joi");
 
 const emailRegexp =
@@ -8,7 +9,7 @@ const UserSchema = Schema(
   {
     name: {
       type: String,
-      required: [true, "name is required"],
+      // required: [true, "name is required"],
     },
     email: {
       type: String,
@@ -19,11 +20,6 @@ const UserSchema = Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-    },
-    subscription: {
-      type: String,
-      enum: ["starter", "pro", "business"],
-      default: "starter",
     },
     avatarUrl: {
       type: String,
@@ -37,7 +33,7 @@ const UserSchema = Schema(
     },
     verifyToken: {
       type: String,
-      required: [true, "Verify token is required"],
+      // required: [true, "Verify token is required"],
     },
     token: {
       type: String,

@@ -1,10 +1,10 @@
-const { Users } = require("../../repositories/users");
+const { findByEmail, create } = require("../../repositories/users");
+
 const HttpCode = require("../../helpers/constants");
-require("dotenv").config();
 
 const signup = async (req, res, next) => {
   const { email } = req.body;
-  const user = await Users.findByEmail(email);
+  const user = await findByEmail(email);
   if (user) {
     return res.status(HttpCode.CONFLICT).json({
       status: "error",
@@ -16,7 +16,7 @@ const signup = async (req, res, next) => {
     });
   }
   try {
-    const newUser = await Users.create(req.body);
+    const newUser = await create(req.body);
     return res.json({
       status: "created",
       contentType: "application/json",
@@ -24,7 +24,6 @@ const signup = async (req, res, next) => {
       responseBody: {
         user: {
           email: newUser.email,
-          subscription: newUser.subscription,
         },
       },
     });

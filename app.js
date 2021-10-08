@@ -4,7 +4,7 @@ const cors = require("cors");
 const boolParser = require("express-query-boolean");
 const { usersRouter } = require("./routes/api");
 const { transactionsRouter } = require("./routes/api");
-
+require("dotenv").config();
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";

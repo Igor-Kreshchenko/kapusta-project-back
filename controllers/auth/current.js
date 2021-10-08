@@ -1,12 +1,11 @@
-const { Users } = require("../../repositories/users");
-const HttpCode = require("../../helpers/constants");
+const { getCurrentUser } = require("../../repositories/users");
 
-require("dotenv").config();
+const HttpCode = require("../../helpers/constants");
 
 const current = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const user = await Users.getCurrentUser(userId);
+    const user = await getCurrentUser(userId);
     console.log(user);
     if (user) {
       return res.json({
@@ -14,7 +13,6 @@ const current = async (req, res, next) => {
         code: HttpCode.OK,
         user: {
           email: user.email,
-          subscription: user.subscription,
         },
       });
     } else {
