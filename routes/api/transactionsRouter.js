@@ -6,17 +6,17 @@ const { controllerWrapper } = require("../../middlewares");
 transactionsRouter.get("/:operationType", ctrl.getOperations);
 
 transactionsRouter.patch(
-  "/transactions/:operationType",
+  "/:operationType",
   controllerWrapper(ctrl.addOperations)
+);
+
+transactionsRouter.delete(
+  "/:operationType/:operationId",
+  controllerWrapper(ctrl.deleteOperationFromTransactions)
 );
 
 // transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
 
 transactionsRouter.patch("/balance", controllerWrapper(ctrl.renewBalance));
-
-transactionsRouter.patch(
-  "/:operationType/:operationId",
-  controllerWrapper(ctrl.deleteOperationFromTransactions)
-);
 
 module.exports = transactionsRouter;
