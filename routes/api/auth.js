@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ctrl = require("../../controllers/auth");
-const { joiUserSchema } = require("../../models");
+const { joiUserSchema, joiSchemaVerifyEmail } = require("../../models");
 const {
   joiValidation,
   controllerWrapper,
@@ -17,5 +17,14 @@ router.post(
 );
 router.post("/login", userValidationMiddleware, controllerWrapper(ctrl.login));
 router.get("/logout", authenticate, controllerWrapper(ctrl.logout));
+router.get(
+  "/verify/:verificationToken",
+  controllerWrapper(ctrl.verifyEmailByToken)
+);
+router.post(
+  "/verify/",
+  joiValidation(joiSchemaVerifyEmail),
+  controllerWrapper(ctrl.verifyEmailByPostRequest)
+);
 
 module.exports = router;

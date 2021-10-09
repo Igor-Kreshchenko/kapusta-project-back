@@ -22,6 +22,16 @@ const login = async (req, res) => {
     });
   }
 
+  if (!user.verify) {
+    return res.status(HttpCode.BAD_REQUEST).json({
+      status: "error",
+      code: HttpCode.BAD_REQUEST,
+      responseBody: {
+        message: "Email is not verified !",
+      },
+    });
+  }
+
   const payload = { id: user.id };
   const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" });
   await updateToken(user.id, token);
