@@ -1,6 +1,7 @@
 const { Schema, model } = require("mongoose");
 const gravatar = require("gravatar");
 const Joi = require("joi");
+// const { v4 } = require("uuid");
 
 const emailRegexp =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -42,6 +43,10 @@ const UserSchema = Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+// UserSchema.methods.setVerifyToken = function () {
+//   this.verifyToken = v4();
+// };
 
 const joiUserSchema = Joi.object({
   password: Joi.string().required(),
