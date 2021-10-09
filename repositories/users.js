@@ -1,7 +1,7 @@
 const { User } = require("../models");
 
 const findById = async (id) => {
-  return await User.findOne({ _id: id });
+  return await User.findById({ _id: id });
 };
 
 const findByEmail = async (email) => {
@@ -14,11 +14,7 @@ const create = async (userOptions) => {
 };
 
 const updateToken = async (id, token) => {
-  return await User.updateOne({ _id: id }, { token });
-};
-
-const getCurrentUser = async (id) => {
-  return await User.findOne({ _id: id }, "email");
+  return await User.findByIdAndUpdate({ _id: id }, { token });
 };
 
 module.exports = {
@@ -26,5 +22,4 @@ module.exports = {
   findByEmail,
   create,
   updateToken,
-  getCurrentUser,
 };

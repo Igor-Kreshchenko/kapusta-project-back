@@ -1,35 +1,35 @@
 const { findByEmail, create } = require("../../repositories/users");
-
 const HttpCode = require("../../helpers/constants");
+const bcrypt = require("bcryptjs");
 
-const signup = async (req, res, next) => {
-  const { email } = req.body;
+const signup = async (req, res) => {
+  const { email, password } = req.body;
   const user = await findByEmail(email);
+
   if (user) {
     return res.status(HttpCode.CONFLICT).json({
       status: "error",
       contentType: "application/json",
       code: HttpCode.CONFLICT,
       responseBody: {
-        message: "Email in use",
+        message: "Already registered",
       },
     });
   }
-  try {
-    const newUser = await create(req.body);
-    return res.json({
-      status: "created",
-      contentType: "application/json",
-      code: HttpCode.CREATED,
-      responseBody: {
-        user: {
-          email: newUser.email,
-        },
+
+  const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  const newUser = await create({ email, password: hashPassword });
+
+  return res.status(HttpCode.CREATED).json({
+    status: "created",
+    contentType: "application/json",
+    code: HttpCode.CREATED,
+    responseBody: {
+      user: {
+        email: newUser.email,
       },
-    });
-  } catch (error) {
-    next(error);
-  }
+    },
+  });
 };
 
 module.exports = signup;

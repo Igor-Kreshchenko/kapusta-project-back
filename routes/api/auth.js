@@ -12,11 +12,6 @@ router.post(
   controllerWrapper(ctrl.signup)
 );
 router.post("/login", userValidationMiddleware, controllerWrapper(ctrl.login));
-router.get("/logout", userValidationMiddleware, controllerWrapper(ctrl.logout));
-router.get(
-  "/current",
-  userValidationMiddleware,
-  controllerWrapper(ctrl.current)
-);
+router.get("/logout", controllerWrapper(ctrl.logout));
 
 module.exports = router;

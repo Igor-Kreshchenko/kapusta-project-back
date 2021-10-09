@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-// const db = require("../db/db");
 require("dotenv").config();
 
 const app = require("../app");
