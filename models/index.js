@@ -1,5 +1,6 @@
 const {
   User,
+  joiUserSchema,
   joiSchemaAddUser,
   joiSchemaChangeUser,
   joiSchemaVerifyEmail,
@@ -14,6 +15,7 @@ const {
 
 module.exports = {
   User,
+  joiUserSchema,
   joiSchemaAddUser,
   joiSchemaChangeUser,
   joiSchemaVerifyEmail,

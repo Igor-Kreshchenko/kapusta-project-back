@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const gravatar = require("gravatar");
 const Joi = require("joi");
 
 const emailRegexp =
@@ -8,7 +9,7 @@ const UserSchema = Schema(
   {
     name: {
       type: String,
-      required: [true, "name is required"],
+      // required: [true, "name is required"],
     },
     email: {
       type: String,
@@ -32,15 +33,24 @@ const UserSchema = Schema(
     },
     verifyToken: {
       type: String,
-      required: [true, "Verify token is required"],
+      // required: [true, "Verify token is required"],
     },
-    accessToken: {
+    token: {
       type: String,
       default: null,
     },
   },
   { versionKey: false, timestamps: true }
 );
+
+const joiUserSchema = Joi.object({
+  password: Joi.string().required(),
+  email: Joi.string()
+    .pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
+    .required(),
+  subscription: Joi.string(),
+  token: Joi.string(),
+});
 
 const joiSchemaAddUser = Joi.object({
   password: Joi.string().required(),
@@ -62,6 +72,7 @@ const User = model("user", UserSchema);
 
 module.exports = {
   User,
+  joiUserSchema,
   joiSchemaAddUser,
   joiSchemaChangeUser,
   joiSchemaVerifyEmail,
