@@ -282,11 +282,11 @@
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal server error (token failed)",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InternalError"
+                  "$ref": "#/components/schemas/TokenFailed"
                 }
               }
             }
@@ -300,31 +300,26 @@
         "summary": "User logout",
         "parameters": [],
         "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NAME"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
-            "description": "Successful operation",
+          "200": {
+            "description": "Successful logout",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NAME"
+                  "$ref": "#/components/schemas/LogoutSuccessful"
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {}
+          "500": {
+            "description": "Internal server error (invalid signature)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenFailed"
+                }
+              }
+            }
           }
         }
       }
@@ -536,7 +531,7 @@
           }
         }
       },
-      "InternalError": {
+      "TokenFailed": {
         "type": "object",
         "properties": {
           "status": {
@@ -554,6 +549,27 @@
             "type": "string",
             "description": "Error message",
             "example": "secretOrPrivateKey must have a value"
+          }
+        }
+      },
+      "LogoutSuccessful": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 204
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Success logout"
           }
         }
       },
