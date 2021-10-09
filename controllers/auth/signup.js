@@ -25,6 +25,7 @@ const signup = async (req, res) => {
     contentType: "application/json",
     code: HttpCode.CREATED,
     responseBody: {
+      token: newUser.token,
       user: {
         email: newUser.email,
       },
