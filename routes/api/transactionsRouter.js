@@ -1,16 +1,22 @@
-const express = require('express')
+const express = require("express");
 const ctrl = require("../../controllers/transactions");
 const transactionsRouter = express.Router();
-const { controllerWrapper } = require("../../middlewares")
+const { controllerWrapper } = require("../../middlewares");
 
-// router.get('/', ctrl.getAllBanks);
+transactionsRouter.get("/:operationType", ctrl.getOperations);
 
-transactionsRouter.patch('/incomes', controllerWrapper(ctrl.addIncome));
+transactionsRouter.patch(
+  "/:operationType",
+  controllerWrapper(ctrl.addOperations)
+);
 
-transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
+transactionsRouter.delete(
+  "/:operationType/:operationId",
+  controllerWrapper(ctrl.deleteOperationFromTransactions)
+);
 
-transactionsRouter.patch('/balance', controllerWrapper(ctrl.renewBalance));
+// transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
 
-transactionsRouter.delete('/:operationType/:operationId', controllerWrapper(ctrl.deleteTransaction));
+transactionsRouter.patch("/balance", controllerWrapper(ctrl.renewBalance));
 
 module.exports = transactionsRouter;

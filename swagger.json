@@ -1,0 +1,234 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "Project Kapu$ta",
+    "description": "API for accounting of income and expenses",
+    "contact": {
+      "email": "patsyuck@yahoo.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [
+    {
+      "url": "http://localhost:4000/",
+      "description": "Test server"
+    },
+    {
+      "url": "https://localhost:4000/",
+      "description": "Prod server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authorization",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Transaction",
+      "description": "Transaction endpoints"
+    }
+  ],
+  "paths": {
+    "/api/transactions": {
+      "get": {
+        "tags": ["Transaction"],
+        "summary": "Get the user transactions by the operation type",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationType",
+            "required": true,
+            "type": "string",
+            "description": "operation type ('income' or 'expense')"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transactions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Transaction"],
+        "summary": "Add an operation to the user transactions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationType",
+            "required": true,
+            "type": "string",
+            "description": "operation type ('income' or 'expense')"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewOperation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddedOperation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Transaction"],
+        "summary": "Delete an operation from the user transactions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationType",
+            "required": true,
+            "type": "string",
+            "description": "operation type ('income' or 'expense')"
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "required": true,
+            "type": "string",
+            "description": "operation id for deleting"
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedOperation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/transactions/balance": {
+      "patch": {
+        "tags": ["Transaction"],
+        "summary": "Renew the user balance",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NAME"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NAME"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/ROUTE": {
+      "METHOD": {
+        "tags": [],
+        "summary": "",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NAME"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NAME"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Transactions": {},
+      "NewOperation": {},
+      "AddedOperation": {},
+      "DeletedOperation": {}
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

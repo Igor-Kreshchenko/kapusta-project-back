@@ -5,6 +5,9 @@ const boolParser = require("express-query-boolean");
 const { usersRouter } = require("./routes/api");
 const { transactionsRouter } = require("./routes/api");
 require("dotenv").config();
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
+
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
@@ -15,6 +18,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(boolParser());
 app.use("/api/users", usersRouter);
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/transactions", transactionsRouter);
 
 app.use((_, res) => {
