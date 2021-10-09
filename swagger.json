@@ -240,30 +240,56 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "data (user email and password) for login",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NAME"
+                "$ref": "#/components/schemas/RegistrationData"
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Successful operation",
+          "200": {
+            "description": "Successful login",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NAME"
+                  "$ref": "#/components/schemas/LoginSuccessful"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Bad request (email or password is omitted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationFailed"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request (email or password is wrong)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginFailed"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalError"
+                }
+              }
+            }
           }
         }
       }
@@ -444,6 +470,90 @@
             "type": "string",
             "description": "Error message",
             "example": "'password' is required"
+          }
+        }
+      },
+      "LoginSuccessful": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "OK"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 200
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "User's token",
+                "example": "xxx.yyy.zzz"
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email",
+                    "example": "user@ukr.net"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "LoginFailed": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 401
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Email or password is wrong"
+          }
+        }
+      },
+      "InternalError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 500
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "secretOrPrivateKey must have a value"
           }
         }
       },
