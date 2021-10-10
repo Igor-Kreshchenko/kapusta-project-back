@@ -45,7 +45,7 @@
             "name": "operationType",
             "required": true,
             "type": "string",
-            "description": "operation type ('income' or 'expense')"
+            "description": "operation type ('income' or 'expenses')"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -60,9 +60,35 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {}
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Non-existent path (path parameter with operation type is wrong or not specified)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       },
@@ -735,7 +761,47 @@
           }
         }
       },
-      "Transactions": {},
+      "Transactions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Operation identificator",
+              "example": "1a5047c5-5595-4bba-b9ba-f83d71a84043"
+            },
+            "amount": {
+              "type": "number",
+              "format": "float",
+              "description": "User's income or expenses",
+              "example": "3.14"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "pattern": "DD.MM.YYYY",
+              "description": "User's operation date",
+              "example": "21.06.2021"
+            },
+            "category": {
+              "type": "string",
+              "description": "User's transaction category",
+              "example": "Продукты"
+            },
+            "description": {
+              "type": "string",
+              "description": "User's transaction description",
+              "example": "Моя зп"
+            },
+            "_id": {
+              "type": "string",
+              "description": "Record identificator",
+              "example": "6162e487ceacd92a013b626f"
+            }
+          }
+        }
+      },
       "NewOperation": {},
       "AddedOperation": {},
       "DeletedOperation": {}

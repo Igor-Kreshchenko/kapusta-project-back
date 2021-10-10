@@ -25,6 +25,6 @@ router.post(
   controllerWrapper(ctrl.verifyEmailByPostRequest)
 );
 router.post("/login", userValidationMiddleware, controllerWrapper(ctrl.login));
-router.get("/logout", authenticate, controllerWrapper(ctrl.logout));
+router.get("/logout", controllerWrapper(authenticate), controllerWrapper(ctrl.logout));
 
 module.exports = router;
