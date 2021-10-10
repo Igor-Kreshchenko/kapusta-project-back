@@ -50,7 +50,7 @@ const TransactionSchema = Schema(
           match: isPositiveIntegerRegexp,
         },
         date: {
-          type: Date,
+          type: String,
           match: dateRegexp,
         },
         category: {
