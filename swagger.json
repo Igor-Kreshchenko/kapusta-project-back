@@ -106,18 +106,18 @@
         ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "Operation data",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewOperation"
+                "$ref": "#/components/schemas/OperationData"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -128,8 +128,24 @@
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Not all required fields are specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       },
@@ -490,41 +506,6 @@
           }
         }
       }
-    },
-    "/ROUTE": {
-      "METHOD": {
-        "tags": [],
-        "summary": "",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NAME"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NAME"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {}
-          }
-        }
-      }
     }
   },
   "components": {
@@ -812,8 +793,78 @@
           }
         }
       },
-      "NewOperation": {},
-      "AddedOperation": {},
+      "OperationData": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Absolute value of the operation amount",
+            "example": 20000.22
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "pattern": "DD.MM.YYYY",
+            "description": "Operation date",
+            "example": "30.09.2021"
+          },
+          "category": {
+            "type": "string",
+            "description": "Operation category",
+            "example": "ЗП"
+          },
+          "description": {
+            "type": "string",
+            "description": "Operation description",
+            "example": "Моя зарплата"
+          }
+        }
+      },
+      "AddedOperation": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "Success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 201
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "format": "float",
+                "description": "Absolute value of the operation amount",
+                "example": 20000.22
+              },
+              "date": {
+                "type": "string",
+                "format": "date",
+                "pattern": "DD.MM.YYYY",
+                "description": "Operation date",
+                "example": "30.09.2021"
+              },
+              "category": {
+                "type": "string",
+                "description": "Operation category",
+                "example": "ЗП"
+              },
+              "description": {
+                "type": "string",
+                "description": "Operation description",
+                "example": "Моя зарплата"
+              }
+            }
+          }
+        }
+      },
       "DeletedOperation": {}
     },
     "securitySchemes": {
