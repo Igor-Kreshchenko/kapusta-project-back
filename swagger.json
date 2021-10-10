@@ -387,7 +387,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationFailed"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -397,17 +397,27 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginFailed"
+                  "$ref": "#/components/schemas/CodeMessageBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bad request (user is not verified)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeMessageBody"
                 }
               }
             }
           },
           "500": {
-            "description": "Internal server error (token failed)",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TokenFailed"
+                  "$ref": "#/components/schemas/CodeAndMessage"
                 }
               }
             }
@@ -665,6 +675,32 @@
             "type": "string",
             "description": "Error of successful message",
             "example": "Email or password is wrong"
+          }
+        }
+      },
+      "CodeMessageBody": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 409
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error or successful message",
+                "example": "Already registered"
+              }
+            }
           }
         }
       },
