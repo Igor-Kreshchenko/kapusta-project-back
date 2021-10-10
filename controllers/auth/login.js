@@ -34,6 +34,7 @@ const login = async (req, res) => {
 
   const payload = { id: user.id };
   const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" });
+  //const token = jwt.sign(payload, JWT_SECRET_KEY);
   await updateToken(user.id, token);
 
   return res.status(HttpCode.OK).json({

@@ -180,6 +180,150 @@
         }
       }
     },
+    "/api/users/signup": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "User registration",
+        "parameters": [],
+        "requestBody": {
+          "description": "data (email and password) for registration",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation (user is created)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationSuccessful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (email or password is omitted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationFailed"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (user was already created)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationConflict"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "User login",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "data (user email and password) for login",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginSuccessful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (email or password is omitted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationFailed"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request (email or password is wrong)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginFailed"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error (token failed)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenFailed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/logout": {
+      "get": {
+        "tags": ["Authorization"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful logout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutSuccessful"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error (invalid signature)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenFailed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/ROUTE": {
       "METHOD": {
         "tags": [],
@@ -218,6 +362,217 @@
   },
   "components": {
     "schemas": {
+      "RegistrationData": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "user@ukr.net"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "VeryStrongPassword!"
+          }
+        }
+      },
+      "RegistrationSuccessful": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "created"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 201
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email",
+                    "example": "user@ukr.net"
+                  },
+                  "balance": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "User's balance",
+                    "example": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "RegistrationConflict": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 409
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error message",
+                "example": "Already registered"
+              }
+            }
+          }
+        }
+      },
+      "RegistrationFailed": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "'password' is required"
+          }
+        }
+      },
+      "LoginSuccessful": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "OK"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 200
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "User's token",
+                "example": "xxx.yyy.zzz"
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email",
+                    "example": "user@ukr.net"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "LoginFailed": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 401
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Email or password is wrong"
+          }
+        }
+      },
+      "TokenFailed": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 500
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "secretOrPrivateKey must have a value"
+          }
+        }
+      },
+      "LogoutSuccessful": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 204
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Success logout"
+          }
+        }
+      },
       "Transactions": {},
       "NewOperation": {},
       "AddedOperation": {},
