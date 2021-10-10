@@ -6,6 +6,7 @@ const addOperations = async (req, res, _) => {
   const { _id: userId } = req.user;
 
   const userTransactions = await findTransactions(userId);
+
   await addOperation(body, userTransactions, operationType);
 
   res.status(201).json({
