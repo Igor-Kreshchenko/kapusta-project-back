@@ -16,7 +16,7 @@ transactionsRouter.delete(
 );
 
 // transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
-
+transactionsRouter.get("/balance", ctrl.getBalance);
 transactionsRouter.patch("/balance", controllerWrapper(ctrl.renewBalance));
 
 module.exports = transactionsRouter;
