@@ -20,7 +20,7 @@
       "description": "Test server"
     },
     {
-      "url": "https://localhost:4000/",
+      "url": "https://kapusta-app.herokuapp.com/",
       "description": "Prod server"
     }
   ],
@@ -458,22 +458,32 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
-          "200": {
+          "204": {
             "description": "Successful logout",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogoutSuccessful"
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
                 }
               }
             }
           },
           "500": {
-            "description": "Internal server error (invalid signature)",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TokenFailed"
+                  "$ref": "#/components/schemas/CodeAndMessage"
                 }
               }
             }
