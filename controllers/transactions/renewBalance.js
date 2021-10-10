@@ -1,21 +1,21 @@
-const {Transaction} = require("../../models");
-const {findTransactions, addTransaction} = require("../../utils");
+const { Transaction } = require("../../models");
+const { findTransactions } = require("../../utils");
 
-const addIncome = async (req, res, _) => {
-    const {balance} = req.body;
-    const {_id: userId} = req.user;
+const renewBalance = async (req, res, _) => {
+  const { balance } = req.body;
+  const { _id: userId } = req.user;
 
-    const userTransactions = await findTransactions(userId, res);
+  const userTransactions = await findTransactions(userId);
 
-    const {_id: transactionId} = userTransactions;
-        
-    await Transaction.findByIdAndUpdate(transactionId, {balance});
+  const { _id: transactionId } = userTransactions;
 
-    res.json({
-        status: "Success",
-        code: 200,
-        balance,
-    });
+  await Transaction.findByIdAndUpdate(transactionId, { balance });
+
+  res.json({
+    status: "Success",
+    code: 200,
+    balance,
+  });
 };
 
-module.exports = addIncome;
+module.exports = renewBalance;
