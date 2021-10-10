@@ -9,10 +9,20 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await findByEmail(email);
 
+  if (!user) {
+    return res.status(HttpCode.UNAUTHORIZED).json({
+      status: "error",
+      code: HttpCode.UNAUTHORIZED,
+      responseBody: {
+        message: "Email or password is wrong",
+      },
+    });
+  }
+
   const hashPassword = user.password;
   const compareResult = bcrypt.compareSync(password, hashPassword);
 
-  if (!user || !compareResult) {
+  if (!compareResult) {
     return res.status(HttpCode.UNAUTHORIZED).json({
       status: "error",
       code: HttpCode.UNAUTHORIZED,
@@ -23,11 +33,11 @@ const login = async (req, res) => {
   }
 
   if (!user.verify) {
-    return res.status(HttpCode.BAD_REQUEST).json({
+    return res.status(HttpCode.FORBIDDEN).json({
       status: "error",
-      code: HttpCode.BAD_REQUEST,
+      code: HttpCode.FORBIDDEN,
       responseBody: {
-        message: "Email is not verified !",
+        message: "Email is not verified!",
       },
     });
   }

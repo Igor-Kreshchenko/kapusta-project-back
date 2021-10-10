@@ -7,18 +7,20 @@ const getTransactions = (operationType, month, year, userTransactions) => {
     if (!month || !year) {
       result = income;
     } else {
-      result = income.filter(({ date }) => {
-        const validDate = new Date(date);
-        return (
-          validDate.getFullYear() === year && validDate.getMonth() + 1 === month
-        );
+        result = income.filter(({ date }) => {
+            //const validDate = inc.date.split('.');
+            //return (parseInt(validDate[1]) === month) && (parseInt(validDate[2]) === year)
+            const validDate = new Date(date);
+            return (
+            validDate.getFullYear() === year && validDate.getMonth() + 1 === month
+            );
       });
     }
   } else if (operationType === "expense") {
     if (!month || !year) {
       result = expenses;
     } else {
-      result = expenses.filter(({ date }) => {
+        result = expenses.filter(({ date }) => {
         const validDate = new Date(date);
         return (
           validDate.getFullYear() === year && validDate.getMonth() + 1 === month

@@ -45,7 +45,7 @@
             "name": "operationType",
             "required": true,
             "type": "string",
-            "description": "operation type ('income' or 'expense')"
+            "description": "operation type ('income' or 'expenses')"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -60,9 +60,35 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {}
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Non-existent path (path parameter with operation type is wrong or not specified)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       },
@@ -191,7 +217,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationData"
+                "$ref": "#/components/schemas/UserPersonalData"
               }
             }
           }
@@ -212,7 +238,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationFailed"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -222,13 +248,135 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationConflict"
+                  "$ref": "#/components/schemas/ContentCodeMessage"
                 }
               }
             }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/verify": {
+      "get": {
+        "tags": ["Authorization"],
+        "summary": "User verification using message sent by SendGrid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "verificationToken",
+            "required": true,
+            "type": "string",
+            "description": "Verification token sent by SendGrid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful verification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationByLink"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid verification link)",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request (attempt to reuse the link)",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationByLink"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "Resending verification message from SendGrid",
+        "parameters": [],
+        "requestBody": {
+          "description": "User's email",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEmail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation (mail was resent)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentCodeMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (email is omitted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request (user was not found)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentCodeMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -238,14 +386,13 @@
         "tags": ["Authorization"],
         "summary": "User login",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "data (user email and password) for login",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationData"
+                "$ref": "#/components/schemas/UserPersonalData"
               }
             }
           }
@@ -266,7 +413,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationFailed"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -276,17 +423,27 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginFailed"
+                  "$ref": "#/components/schemas/CodeMessageBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bad request (user is not verified)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeMessageBody"
                 }
               }
             }
           },
           "500": {
-            "description": "Internal server error (token failed)",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TokenFailed"
+                  "$ref": "#/components/schemas/CodeAndMessage"
                 }
               }
             }
@@ -362,7 +519,19 @@
   },
   "components": {
     "schemas": {
-      "RegistrationData": {
+      "UserEmail": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "user@ukr.net"
+          }
+        }
+      },
+      "UserPersonalData": {
         "type": "object",
         "required": ["email", "password"],
         "properties": {
@@ -427,13 +596,13 @@
           }
         }
       },
-      "RegistrationConflict": {
+      "VerificationByLink": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string",
             "description": "Operation status",
-            "example": "error"
+            "example": "success"
           },
           "contentType": {
             "type": "string",
@@ -444,29 +613,23 @@
             "type": "integer",
             "format": "int32",
             "description": "Status code",
-            "example": 409
+            "example": 200
           },
           "responseBody": {
             "type": "object",
             "properties": {
               "message": {
                 "type": "string",
-                "description": "Error message",
-                "example": "Already registered"
+                "example": "Verification successful"
               }
             }
           }
         }
       },
-      "RegistrationFailed": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Error message",
-            "example": "'password' is required"
-          }
-        }
+      "VerificationFailed": {
+        "type": "string",
+        "description": "Text of the error message",
+        "example": "<html><head><title>Wrong Link</title></head><body><h1>Wrong Link</h1><p>You have clicked on an invalid link. Please make sure that you have typed the link correctly. If are copying this link from a mail reader please ensure that you have copied all the lines in the link.</p></body></html>"
       },
       "LoginSuccessful": {
         "type": "object",
@@ -510,7 +673,17 @@
           }
         }
       },
-      "LoginFailed": {
+      "Message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error or successful message",
+            "example": "'password' is required"
+          }
+        }
+      },
+      "CodeAndMessage": {
         "type": "object",
         "properties": {
           "status": {
@@ -526,12 +699,12 @@
           },
           "message": {
             "type": "string",
-            "description": "Error message",
+            "description": "Error of successful message",
             "example": "Email or password is wrong"
           }
         }
       },
-      "TokenFailed": {
+      "CodeMessageBody": {
         "type": "object",
         "properties": {
           "status": {
@@ -543,37 +716,92 @@
             "type": "integer",
             "format": "int32",
             "description": "Status code",
-            "example": 500
+            "example": 409
           },
-          "message": {
-            "type": "string",
-            "description": "Error message",
-            "example": "secretOrPrivateKey must have a value"
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error or successful message",
+                "example": "Already registered"
+              }
+            }
           }
         }
       },
-      "LogoutSuccessful": {
+      "ContentCodeMessage": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string",
             "description": "Operation status",
-            "example": "success"
+            "example": "error"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
           },
           "code": {
             "type": "integer",
             "format": "int32",
             "description": "Status code",
-            "example": 204
+            "example": 409
           },
-          "message": {
-            "type": "string",
-            "description": "Error message",
-            "example": "Success logout"
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error or successful message",
+                "example": "Already registered"
+              }
+            }
           }
         }
       },
-      "Transactions": {},
+      "Transactions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Operation identificator",
+              "example": "1a5047c5-5595-4bba-b9ba-f83d71a84043"
+            },
+            "amount": {
+              "type": "number",
+              "format": "float",
+              "description": "User's income or expenses",
+              "example": "3.14"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "pattern": "DD.MM.YYYY",
+              "description": "User's operation date",
+              "example": "21.06.2021"
+            },
+            "category": {
+              "type": "string",
+              "description": "User's transaction category",
+              "example": "Продукты"
+            },
+            "description": {
+              "type": "string",
+              "description": "User's transaction description",
+              "example": "Моя зп"
+            },
+            "_id": {
+              "type": "string",
+              "description": "Record identificator",
+              "example": "6162e487ceacd92a013b626f"
+            }
+          }
+        }
+      },
       "NewOperation": {},
       "AddedOperation": {},
       "DeletedOperation": {}

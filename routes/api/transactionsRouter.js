@@ -3,23 +3,27 @@ const ctrl = require("../../controllers/transactions");
 const transactionsRouter = express.Router();
 const { controllerWrapper, authenticate } = require("../../middlewares");
 
-transactionsRouter.get("/:operationType", authenticate, ctrl.getOperations);
+transactionsRouter.get(
+  "/:operationType",
+  controllerWrapper(authenticate),
+  controllerWrapper(ctrl.getOperations)
+);
 
 transactionsRouter.patch(
   "/:operationType",
-  authenticate,
+  controllerWrapper(authenticate),
   controllerWrapper(ctrl.addOperations)
 );
 
 transactionsRouter.delete(
   "/:operationType/:operationId",
-  authenticate,
+  controllerWrapper(authenticate),
   controllerWrapper(ctrl.deleteOperationFromTransactions)
 );
 
 transactionsRouter.patch(
   "/balance",
-  authenticate,
+  controllerWrapper(authenticate),
   controllerWrapper(ctrl.renewBalance)
 );
 
