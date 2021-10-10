@@ -6,4 +6,5 @@ const create = async (id) => {
 };
 
 const transactions = { create };
+
 module.exports = transactions;
