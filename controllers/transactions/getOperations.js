@@ -3,7 +3,7 @@ const HttpCode = require("../../helpers/constants");
 
 const getOperations = async (req, res, _) => {
     const { operationType } = req.params;
-    if ((operationType !== "income") && (operationType !== "expenses")) {
+    if ((operationType !== "income") && (operationType !== "expense")) {
         return res.status(HttpCode.NOT_FOUND).json({
             status: "error",
             code: HttpCode.NOT_FOUND,
@@ -21,14 +21,14 @@ const getOperations = async (req, res, _) => {
     };
     const {_id: userId} = req.user;
 
-    const userTransactions = await findTransactions(userId, res);
-    const data = getTransactions(operationType, month, year, userTransactions);
+  const userTransactions = await findTransactions(userId, res);
+  const data = getTransactions(operationType, month, year, userTransactions);
 
-    res.json({
-        status: "Success",
-        code: 200,
-        data,
-    });
+  res.json({
+    status: "Success",
+    code: 200,
+    data,
+  });
 };
 
 module.exports = getOperations;
