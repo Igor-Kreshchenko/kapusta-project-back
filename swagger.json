@@ -220,12 +220,12 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "New balance",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NAME"
+                "$ref": "#/components/schemas/Balance"
               }
             }
           }
@@ -236,14 +236,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NAME"
+                  "$ref": "#/components/schemas/NewBalance"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Balance is not specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -926,6 +942,39 @@
             "type": "string",
             "description": "Record identificator",
             "example": "6162e487ceacd92a013b626f"
+          }
+        }
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "balance": {
+            "type": "number",
+            "format": "float",
+            "description": "new ballance",
+            "example": 50000.05
+          }
+        }
+      },
+      "NewBalance": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "Success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 200
+          },
+          "balance": {
+            "type": "number",
+            "format": "float",
+            "description": "new ballance",
+            "example": 50000.05
           }
         }
       }
