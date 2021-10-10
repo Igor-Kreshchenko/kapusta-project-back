@@ -222,7 +222,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationConflict"
+                  "$ref": "#/components/schemas/ContentCodeMessage"
                 }
               }
             }
@@ -301,30 +301,56 @@
         "summary": "Resending verification message from SendGrid",
         "parameters": [],
         "requestBody": {
-          "description": "",
+          "description": "User's email",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NAME"
+                "$ref": "#/components/schemas/UserEmail"
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "Successful operation",
+          "200": {
+            "description": "Successful operation (mail was resent)",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NAME"
+                  "$ref": "#/components/schemas/ContentCodeMessage"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Bad request (email is omitted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request (user was not found)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentCodeMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -457,6 +483,18 @@
   },
   "components": {
     "schemas": {
+      "UserEmail": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "user@ukr.net"
+          }
+        }
+      },
       "UserPersonalData": {
         "type": "object",
         "required": ["email", "password"],
@@ -517,37 +555,6 @@
                     "example": 0
                   }
                 }
-              }
-            }
-          }
-        }
-      },
-      "RegistrationConflict": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Operation status",
-            "example": "error"
-          },
-          "contentType": {
-            "type": "string",
-            "description": "Data type",
-            "example": "application/json"
-          },
-          "code": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Status code",
-            "example": 409
-          },
-          "responseBody": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string",
-                "description": "Error message",
-                "example": "Already registered"
               }
             }
           }
@@ -658,6 +665,37 @@
             "type": "string",
             "description": "Error of successful message",
             "example": "Email or password is wrong"
+          }
+        }
+      },
+      "ContentCodeMessage": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 409
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error or successful message",
+                "example": "Already registered"
+              }
+            }
           }
         }
       },
