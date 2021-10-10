@@ -191,7 +191,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationData"
+                "$ref": "#/components/schemas/UserPersonalData"
               }
             }
           }
@@ -212,7 +212,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationFailed"
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -233,19 +233,92 @@
         }
       }
     },
+    "/api/users/verify": {
+      "get": {
+        "tags": ["Authorization"],
+        "summary": "",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "verificationToken",
+            "required": true,
+            "type": "string",
+            "description": "Verification token sent by SendGrid"
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NAME"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NAME"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      },
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "",
+        "parameters": [],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NAME"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NAME"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        }
+      }
+    },
     "/api/users/login": {
       "post": {
         "tags": ["Authorization"],
         "summary": "User login",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "data (user email and password) for login",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationData"
+                "$ref": "#/components/schemas/UserPersonalData"
               }
             }
           }
@@ -362,7 +435,7 @@
   },
   "components": {
     "schemas": {
-      "RegistrationData": {
+      "UserPersonalData": {
         "type": "object",
         "required": ["email", "password"],
         "properties": {
@@ -427,47 +500,6 @@
           }
         }
       },
-      "RegistrationConflict": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Operation status",
-            "example": "error"
-          },
-          "contentType": {
-            "type": "string",
-            "description": "Data type",
-            "example": "application/json"
-          },
-          "code": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Status code",
-            "example": 409
-          },
-          "responseBody": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string",
-                "description": "Error message",
-                "example": "Already registered"
-              }
-            }
-          }
-        }
-      },
-      "RegistrationFailed": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Error message",
-            "example": "'password' is required"
-          }
-        }
-      },
       "LoginSuccessful": {
         "type": "object",
         "properties": {
@@ -510,7 +542,48 @@
           }
         }
       },
-      "LoginFailed": {
+      "RegistrationConflict": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 409
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error message",
+                "example": "Already registered"
+              }
+            }
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error or successful message",
+            "example": "'password' is required"
+          }
+        }
+      },
+      "CodeAndMessage": {
         "type": "object",
         "properties": {
           "status": {
@@ -526,50 +599,8 @@
           },
           "message": {
             "type": "string",
-            "description": "Error message",
+            "description": "Error of successful message",
             "example": "Email or password is wrong"
-          }
-        }
-      },
-      "TokenFailed": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Operation status",
-            "example": "error"
-          },
-          "code": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Status code",
-            "example": 500
-          },
-          "message": {
-            "type": "string",
-            "description": "Error message",
-            "example": "secretOrPrivateKey must have a value"
-          }
-        }
-      },
-      "LogoutSuccessful": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Operation status",
-            "example": "success"
-          },
-          "code": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Status code",
-            "example": 204
-          },
-          "message": {
-            "type": "string",
-            "description": "Error message",
-            "example": "Success logout"
           }
         }
       },

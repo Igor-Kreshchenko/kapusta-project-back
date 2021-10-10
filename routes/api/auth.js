@@ -15,16 +15,16 @@ router.post(
   userValidationMiddleware,
   controllerWrapper(ctrl.signup)
 );
-router.post("/login", userValidationMiddleware, controllerWrapper(ctrl.login));
-router.get("/logout", authenticate, controllerWrapper(ctrl.logout));
 router.get(
   "/verify/:verificationToken",
   controllerWrapper(ctrl.verifyEmailByToken)
 );
 router.post(
-  "/verify/",
+  "/verify",
   joiValidation(joiSchemaVerifyEmail),
   controllerWrapper(ctrl.verifyEmailByPostRequest)
 );
+router.post("/login", userValidationMiddleware, controllerWrapper(ctrl.login));
+router.get("/logout", authenticate, controllerWrapper(ctrl.logout));
 
 module.exports = router;
