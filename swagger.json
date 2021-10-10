@@ -20,7 +20,7 @@
       "description": "Test server"
     },
     {
-      "url": "https://localhost:4000/",
+      "url": "https://kapusta-app.herokuapp.com/",
       "description": "Prod server"
     }
   ],
@@ -106,18 +106,18 @@
         ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "Operation data",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewOperation"
+                "$ref": "#/components/schemas/OperationData"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -128,8 +128,24 @@
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Not all required fields are specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       },
@@ -155,7 +171,7 @@
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful operation (deleted)",
             "content": {
               "application/json": {
                 "schema": {
@@ -165,8 +181,34 @@
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "There is no operation with the specified identifier among the transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Incorrect path (less than two required parameters are specified)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -178,12 +220,12 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "New balance",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NAME"
+                "$ref": "#/components/schemas/Balance"
               }
             }
           }
@@ -194,14 +236,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NAME"
+                  "$ref": "#/components/schemas/NewBalance"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Balance is not specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -458,60 +516,35 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "responses": {
-          "200": {
+          "204": {
             "description": "Successful logout",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogoutSuccessful"
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
                 }
               }
             }
           },
           "500": {
-            "description": "Internal server error (invalid signature)",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TokenFailed"
+                  "$ref": "#/components/schemas/CodeAndMessage"
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/ROUTE": {
-      "METHOD": {
-        "tags": [],
-        "summary": "",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NAME"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NAME"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {}
           }
         }
       }
@@ -802,9 +835,149 @@
           }
         }
       },
-      "NewOperation": {},
-      "AddedOperation": {},
-      "DeletedOperation": {}
+      "OperationData": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Absolute value of the operation amount",
+            "example": 20000.22
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "pattern": "DD.MM.YYYY",
+            "description": "Operation date",
+            "example": "30.09.2021"
+          },
+          "category": {
+            "type": "string",
+            "description": "Operation category",
+            "example": "ЗП"
+          },
+          "description": {
+            "type": "string",
+            "description": "Operation description",
+            "example": "Моя зарплата"
+          }
+        }
+      },
+      "AddedOperation": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "Success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 201
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "format": "float",
+                "description": "Absolute value of the operation amount",
+                "example": 20000.22
+              },
+              "date": {
+                "type": "string",
+                "format": "date",
+                "pattern": "DD.MM.YYYY",
+                "description": "Operation date",
+                "example": "30.09.2021"
+              },
+              "category": {
+                "type": "string",
+                "description": "Operation category",
+                "example": "ЗП"
+              },
+              "description": {
+                "type": "string",
+                "description": "Operation description",
+                "example": "Моя зарплата"
+              }
+            }
+          }
+        }
+      },
+      "DeletedOperation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Operation identificator",
+            "example": "1a5047c5-5595-4bba-b9ba-f83d71a84043"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "User's income or expenses",
+            "example": "3.14"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "pattern": "DD.MM.YYYY",
+            "description": "User's operation date",
+            "example": "21.06.2021"
+          },
+          "category": {
+            "type": "string",
+            "description": "User's transaction category",
+            "example": "Продукты"
+          },
+          "description": {
+            "type": "string",
+            "description": "User's transaction description",
+            "example": "Моя зп"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Record identificator",
+            "example": "6162e487ceacd92a013b626f"
+          }
+        }
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "balance": {
+            "type": "number",
+            "format": "float",
+            "description": "new ballance",
+            "example": 50000.05
+          }
+        }
+      },
+      "NewBalance": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "Success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 200
+          },
+          "balance": {
+            "type": "number",
+            "format": "float",
+            "description": "new ballance",
+            "example": 50000.05
+          }
+        }
+      }
     },
     "securitySchemes": {
       "Bearer": {
