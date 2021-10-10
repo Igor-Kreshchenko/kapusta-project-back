@@ -1,7 +1,7 @@
 const express = require("express");
 const ctrl = require("../../controllers/transactions");
 const transactionsRouter = express.Router();
-const { controllerWrapper } = require("../../middlewares");
+const { controllerWrapper, authenticate } = require("../../middlewares");
 
 transactionsRouter.get("/:operationType", ctrl.getOperations);
 
@@ -17,7 +17,11 @@ transactionsRouter.delete(
 
 // transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
 
-transactionsRouter.get("/balance", controllerWrapper(ctrl.getBalance));
+transactionsRouter.get(
+  "/balance",
+  controllerWrapper(authenticate),
+  controllerWrapper(ctrl.getBalance)
+);
 
 transactionsRouter.patch("/balance", controllerWrapper(ctrl.renewBalance));
 
