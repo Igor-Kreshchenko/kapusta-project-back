@@ -228,7 +228,14 @@
             }
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -236,7 +243,7 @@
     "/api/users/verify": {
       "get": {
         "tags": ["Authorization"],
-        "summary": "",
+        "summary": "User verification using message sent by SendGrid",
         "parameters": [
           {
             "in": "path",
@@ -246,37 +253,52 @@
             "description": "Verification token sent by SendGrid"
           }
         ],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NAME"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
-            "description": "Successful operation",
+          "200": {
+            "description": "Successful verification",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NAME"
+                  "$ref": "#/components/schemas/VerificationByLink"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Bad request (invalid verification link)",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request (attempt to reuse the link)",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationByLink"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       },
       "post": {
         "tags": ["Authorization"],
-        "summary": "",
+        "summary": "Resending verification message from SendGrid",
         "parameters": [],
         "requestBody": {
           "description": "",
@@ -500,6 +522,72 @@
           }
         }
       },
+      "RegistrationConflict": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 409
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error message",
+                "example": "Already registered"
+              }
+            }
+          }
+        }
+      },
+      "VerificationByLink": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 200
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Verification successful"
+              }
+            }
+          }
+        }
+      },
+      "VerificationFailed": {
+        "type": "string",
+        "description": "Text of the error message",
+        "example": "<html><head><title>Wrong Link</title></head><body><h1>Wrong Link</h1><p>You have clicked on an invalid link. Please make sure that you have typed the link correctly. If are copying this link from a mail reader please ensure that you have copied all the lines in the link.</p></body></html>"
+      },
       "LoginSuccessful": {
         "type": "object",
         "properties": {
@@ -537,37 +625,6 @@
                     "example": "user@ukr.net"
                   }
                 }
-              }
-            }
-          }
-        }
-      },
-      "RegistrationConflict": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "description": "Operation status",
-            "example": "error"
-          },
-          "contentType": {
-            "type": "string",
-            "description": "Data type",
-            "example": "application/json"
-          },
-          "code": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Status code",
-            "example": 409
-          },
-          "responseBody": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string",
-                "description": "Error message",
-                "example": "Already registered"
               }
             }
           }
