@@ -45,7 +45,19 @@
             "name": "operationType",
             "required": true,
             "type": "string",
-            "description": "operation type ('income' or 'expenses')"
+            "description": "operation type ('income' or 'expense')"
+          },
+          {
+            "in": "query",
+            "name": "year",
+            "type": "string",
+            "description": "year of the request operations"
+          },
+          {
+            "in": "query",
+            "name": "month",
+            "type": "string",
+            "description": "month of the request operations"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -214,6 +226,44 @@
       }
     },
     "/api/transactions/balance": {
+      "get": {
+        "tags": ["Transaction"],
+        "summary": "Get the user balance",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewBalance"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Path is wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      },
       "patch": {
         "tags": ["Transaction"],
         "summary": "Renew the user balance",
@@ -548,10 +598,61 @@
           }
         }
       }
+    },
+    "api/users/current": {
+      "get": {
+        "tags": ["Authorization"],
+        "summary": "Get the user email",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Email"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "Email": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "user@ukr.net"
+          }
+        }
+      },
       "UserEmail": {
         "type": "object",
         "required": ["email", "password"],
