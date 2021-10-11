@@ -1,7 +1,18 @@
 const express = require("express");
-const ctrl = require("../../controllers/transactions");
+const { transactions: ctrl } = require("../../controllers");
 const transactionsRouter = express.Router();
-const { controllerWrapper, authenticate } = require("../../middlewares");
+const {
+  joiSchemaAddOperation,
+  joiSchemaRenewBalance,
+} = require("../../models");
+const {
+  controllerWrapper,
+  joiValidation,
+  authenticate,
+} = require("../../middlewares");
+
+const operationsAddValidation = joiValidation(joiSchemaAddOperation);
+const renewBalanceValidation = joiValidation(joiSchemaRenewBalance);
 
 transactionsRouter.get(
   "/balance",
@@ -11,6 +22,7 @@ transactionsRouter.get(
 
 transactionsRouter.patch(
   "/balance",
+  renewBalanceValidation,
   controllerWrapper(authenticate),
   controllerWrapper(ctrl.renewBalance)
 );
@@ -23,6 +35,7 @@ transactionsRouter.get(
 
 transactionsRouter.patch(
   "/:operationType",
+  operationsAddValidation,
   controllerWrapper(authenticate),
   controllerWrapper(ctrl.addOperations)
 );

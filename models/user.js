@@ -9,7 +9,6 @@ const UserSchema = Schema(
   {
     name: {
       type: String,
-      // required: [true, "name is required"],
     },
     email: {
       type: String,
@@ -48,7 +47,6 @@ const joiUserSchema = Joi.object({
   email: Joi.string()
     .pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
     .required(),
-  subscription: Joi.string(),
   token: Joi.string(),
 });
 
@@ -56,12 +54,6 @@ const joiSchemaAddUser = Joi.object({
   password: Joi.string().required(),
   email: Joi.string().email(emailRegexp).required(),
   name: Joi.string().required(),
-});
-
-const joiSchemaChangeUser = Joi.object({
-  password: Joi.string(),
-  email: Joi.string().email(emailRegexp),
-  name: Joi.string(),
 });
 
 const joiSchemaVerifyEmail = Joi.object({
@@ -74,6 +66,5 @@ module.exports = {
   User,
   joiUserSchema,
   joiSchemaAddUser,
-  joiSchemaChangeUser,
   joiSchemaVerifyEmail,
 };
