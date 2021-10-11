@@ -226,6 +226,44 @@
       }
     },
     "/api/transactions/balance": {
+      "get": {
+        "tags": ["Transaction"],
+        "summary": "Get the user balance",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewBalance"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Path is wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      },
       "patch": {
         "tags": ["Transaction"],
         "summary": "Renew the user balance",
