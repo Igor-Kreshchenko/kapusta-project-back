@@ -9,10 +9,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await findByEmail(email);
 
-  const hashPassword = user.password;
-  const compareResult = bcrypt.compareSync(password, hashPassword);
-
-  if (!user || !compareResult) {
+  if (!user) {
     return res.status(HttpCode.UNAUTHORIZED).json({
       status: "error",
       code: HttpCode.UNAUTHORIZED,
@@ -22,8 +19,32 @@ const login = async (req, res) => {
     });
   }
 
+  const hashPassword = user.password;
+  const compareResult = bcrypt.compareSync(password, hashPassword);
+
+  if (!compareResult) {
+    return res.status(HttpCode.UNAUTHORIZED).json({
+      status: "error",
+      code: HttpCode.UNAUTHORIZED,
+      responseBody: {
+        message: "Email or password is wrong",
+      },
+    });
+  }
+
+  if (!user.verify) {
+    return res.status(HttpCode.FORBIDDEN).json({
+      status: "error",
+      code: HttpCode.FORBIDDEN,
+      responseBody: {
+        message: "Email is not verified!",
+      },
+    });
+  }
+
   const payload = { id: user.id };
   const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" });
+  //const token = jwt.sign(payload, JWT_SECRET_KEY);
   await updateToken(user.id, token);
 
   return res.status(HttpCode.OK).json({

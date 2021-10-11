@@ -20,7 +20,7 @@
       "description": "Test server"
     },
     {
-      "url": "https://localhost:4000/",
+      "url": "https://kapusta-app.herokuapp.com/",
       "description": "Prod server"
     }
   ],
@@ -45,7 +45,7 @@
             "name": "operationType",
             "required": true,
             "type": "string",
-            "description": "operation type ('income' or 'expense')"
+            "description": "operation type ('income' or 'expenses')"
           }
         ],
         "security": [{ "Bearer": [] }],
@@ -60,9 +60,35 @@
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {}
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Non-existent path (path parameter with operation type is wrong or not specified)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       },
@@ -80,18 +106,18 @@
         ],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "Operation data",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewOperation"
+                "$ref": "#/components/schemas/OperationData"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -102,8 +128,24 @@
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Not all required fields are specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       },
@@ -129,7 +171,7 @@
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful operation (deleted)",
             "content": {
               "application/json": {
                 "schema": {
@@ -139,8 +181,34 @@
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "There is no operation with the specified identifier among the transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Incorrect path (less than two required parameters are specified)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -152,12 +220,12 @@
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "New balance",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NAME"
+                "$ref": "#/components/schemas/Balance"
               }
             }
           }
@@ -168,49 +236,315 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NAME"
+                  "$ref": "#/components/schemas/NewBalance"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Balance is not specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/ROUTE": {
-      "METHOD": {
-        "tags": [],
-        "summary": "",
+    "/api/users/signup": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "User registration",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "",
+          "description": "data (email and password) for registration",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NAME"
+                "$ref": "#/components/schemas/UserPersonalData"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Successful operation",
+            "description": "Successful operation (user is created)",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NAME"
+                  "$ref": "#/components/schemas/RegistrationSuccessful"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request",
-            "content": {}
+            "description": "Bad request (email or password is omitted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (user was already created)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentCodeMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/verify": {
+      "get": {
+        "tags": ["Authorization"],
+        "summary": "User verification using message sent by SendGrid",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "verificationToken",
+            "required": true,
+            "type": "string",
+            "description": "Verification token sent by SendGrid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful verification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationByLink"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid verification link)",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationFailed"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request (attempt to reuse the link)",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationByLink"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "Resending verification message from SendGrid",
+        "parameters": [],
+        "requestBody": {
+          "description": "User's email",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEmail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation (mail was resent)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentCodeMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (email is omitted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request (user was not found)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentCodeMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": ["Authorization"],
+        "summary": "User login",
+        "parameters": [],
+        "requestBody": {
+          "description": "data (user email and password) for login",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserPersonalData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginSuccessful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (email or password is omitted)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request (email or password is wrong)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeMessageBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bad request (user is not verified)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeMessageBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/logout": {
+      "get": {
+        "tags": ["Authorization"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Successful logout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodeAndMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -218,10 +552,432 @@
   },
   "components": {
     "schemas": {
-      "Transactions": {},
-      "NewOperation": {},
-      "AddedOperation": {},
-      "DeletedOperation": {}
+      "UserEmail": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "user@ukr.net"
+          }
+        }
+      },
+      "UserPersonalData": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email",
+            "example": "user@ukr.net"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "VeryStrongPassword!"
+          }
+        }
+      },
+      "RegistrationSuccessful": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "created"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 201
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email",
+                    "example": "user@ukr.net"
+                  },
+                  "balance": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "User's balance",
+                    "example": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "VerificationByLink": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 200
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Verification successful"
+              }
+            }
+          }
+        }
+      },
+      "VerificationFailed": {
+        "type": "string",
+        "description": "Text of the error message",
+        "example": "<html><head><title>Wrong Link</title></head><body><h1>Wrong Link</h1><p>You have clicked on an invalid link. Please make sure that you have typed the link correctly. If are copying this link from a mail reader please ensure that you have copied all the lines in the link.</p></body></html>"
+      },
+      "LoginSuccessful": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "OK"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 200
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "User's token",
+                "example": "xxx.yyy.zzz"
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email",
+                    "example": "user@ukr.net"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error or successful message",
+            "example": "'password' is required"
+          }
+        }
+      },
+      "CodeAndMessage": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 401
+          },
+          "message": {
+            "type": "string",
+            "description": "Error of successful message",
+            "example": "Email or password is wrong"
+          }
+        }
+      },
+      "CodeMessageBody": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 409
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error or successful message",
+                "example": "Already registered"
+              }
+            }
+          }
+        }
+      },
+      "ContentCodeMessage": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "error"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "Data type",
+            "example": "application/json"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 409
+          },
+          "responseBody": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error or successful message",
+                "example": "Already registered"
+              }
+            }
+          }
+        }
+      },
+      "Transactions": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Operation identificator",
+              "example": "1a5047c5-5595-4bba-b9ba-f83d71a84043"
+            },
+            "amount": {
+              "type": "number",
+              "format": "float",
+              "description": "User's income or expenses",
+              "example": "3.14"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "pattern": "DD.MM.YYYY",
+              "description": "User's operation date",
+              "example": "21.06.2021"
+            },
+            "category": {
+              "type": "string",
+              "description": "User's transaction category",
+              "example": "Продукты"
+            },
+            "description": {
+              "type": "string",
+              "description": "User's transaction description",
+              "example": "Моя зп"
+            },
+            "_id": {
+              "type": "string",
+              "description": "Record identificator",
+              "example": "6162e487ceacd92a013b626f"
+            }
+          }
+        }
+      },
+      "OperationData": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Absolute value of the operation amount",
+            "example": 20000.22
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "pattern": "DD.MM.YYYY",
+            "description": "Operation date",
+            "example": "30.09.2021"
+          },
+          "category": {
+            "type": "string",
+            "description": "Operation category",
+            "example": "ЗП"
+          },
+          "description": {
+            "type": "string",
+            "description": "Operation description",
+            "example": "Моя зарплата"
+          }
+        }
+      },
+      "AddedOperation": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "Success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 201
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "format": "float",
+                "description": "Absolute value of the operation amount",
+                "example": 20000.22
+              },
+              "date": {
+                "type": "string",
+                "format": "date",
+                "pattern": "DD.MM.YYYY",
+                "description": "Operation date",
+                "example": "30.09.2021"
+              },
+              "category": {
+                "type": "string",
+                "description": "Operation category",
+                "example": "ЗП"
+              },
+              "description": {
+                "type": "string",
+                "description": "Operation description",
+                "example": "Моя зарплата"
+              }
+            }
+          }
+        }
+      },
+      "DeletedOperation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Operation identificator",
+            "example": "1a5047c5-5595-4bba-b9ba-f83d71a84043"
+          },
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "User's income or expenses",
+            "example": "3.14"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "pattern": "DD.MM.YYYY",
+            "description": "User's operation date",
+            "example": "21.06.2021"
+          },
+          "category": {
+            "type": "string",
+            "description": "User's transaction category",
+            "example": "Продукты"
+          },
+          "description": {
+            "type": "string",
+            "description": "User's transaction description",
+            "example": "Моя зп"
+          },
+          "_id": {
+            "type": "string",
+            "description": "Record identificator",
+            "example": "6162e487ceacd92a013b626f"
+          }
+        }
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "balance": {
+            "type": "number",
+            "format": "float",
+            "description": "new ballance",
+            "example": 50000.05
+          }
+        }
+      },
+      "NewBalance": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "Success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Status code",
+            "example": 200
+          },
+          "balance": {
+            "type": "number",
+            "format": "float",
+            "description": "new ballance",
+            "example": 50000.05
+          }
+        }
+      }
     },
     "securitySchemes": {
       "Bearer": {

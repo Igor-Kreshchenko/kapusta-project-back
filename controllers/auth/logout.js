@@ -5,7 +5,7 @@ const logout = async (req, res) => {
   const id = req.id;
   await updateToken(id, null);
 
-  return res.json({
+  return res.status(HttpCode.NO_CONTENT).json({
     status: "success",
     code: HttpCode.NO_CONTENT,
     message: "Success logout",

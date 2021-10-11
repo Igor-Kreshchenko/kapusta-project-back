@@ -1,29 +1,35 @@
 const getTransactions = (operationType, month, year, userTransactions) => {
-    const {expenses, income} = userTransactions;
-    
-    let result;
+  const { expenses, income } = userTransactions;
 
-    if (operationType === "income"){
-        if (!month || !year){
-            result = income;
-        }else{
-            result = income.filter(({date}) => {
-                const validDate = new Date(date);
-                return validDate.getFullYear() === year && validDate.getMonth()+1 === month;
-            });
-        }
-    }else if (operationType === "expense"){
-        if (!month || !year){
-            result = expenses;
-        }else{
-            result = expenses.filter(({date}) => {
-                const validDate = new Date(date);
-                return validDate.getFullYear() === year && validDate.getMonth()+1 === month;
-            });
-        }
-    };
+  let result;
 
-    return result;
-};  
+  if (operationType === "income") {
+    if (!month || !year) {
+      result = income;
+    } else {
+        result = income.filter(({ date }) => {
+            //const validDate = inc.date.split('.');
+            //return (parseInt(validDate[1]) === month) && (parseInt(validDate[2]) === year)
+            const validDate = new Date(date);
+            return (
+            validDate.getFullYear() === year && validDate.getMonth() + 1 === month
+            );
+      });
+    }
+  } else if (operationType === "expense") {
+    if (!month || !year) {
+      result = expenses;
+    } else {
+        result = expenses.filter(({ date }) => {
+        const validDate = new Date(date);
+        return (
+          validDate.getFullYear() === year && validDate.getMonth() + 1 === month
+        );
+      });
+    }
+  }
 
-exports.module = getTransactions;
+  return result;
+};
+
+module.exports = getTransactions;

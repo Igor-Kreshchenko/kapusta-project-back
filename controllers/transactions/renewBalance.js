@@ -1,21 +1,27 @@
-const {Transaction} = require("../../models");
-const {findTransactions, addTransaction} = require("../../utils");
+const { Transaction } = require("../../models");
+const { findTransactions } = require("../../utils");
+const HttpCode = require("../../helpers/constants");
 
-const addIncome = async (req, res, _) => {
-    const {balance} = req.body;
-    const {_id: userId} = req.user;
-
-    const userTransactions = await findTransactions(userId, res);
-
-    const {_id: transactionId} = userTransactions;
-        
-    await Transaction.findByIdAndUpdate(transactionId, {balance});
-
-    res.json({
-        status: "Success",
-        code: 200,
-        balance,
+const renewBalance = async (req, res, _) => {
+  const { balance } = req.body;
+  if (!balance) {
+    return res.status(HttpCode.BAD_REQUEST).json({
+      message: "'balance' is required field",
     });
+  }
+  const { _id: userId } = req.user;
+
+  const userTransactions = await findTransactions(userId);
+
+  const { _id: transactionId } = userTransactions;
+
+  await Transaction.findByIdAndUpdate(transactionId, { balance });
+
+  res.json({
+    status: "Success",
+    code: 200,
+    balance,
+  });
 };
 
-module.exports = addIncome;
+module.exports = renewBalance;

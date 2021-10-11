@@ -15,18 +15,22 @@ transactionsRouter.patch(
   controllerWrapper(ctrl.renewBalance)
 );
 
-transactionsRouter.get("/:operationType", ctrl.getOperations);
+transactionsRouter.get(
+  "/:operationType",
+  controllerWrapper(authenticate),
+  controllerWrapper(ctrl.getOperations)
+);
 
 transactionsRouter.patch(
   "/:operationType",
+  controllerWrapper(authenticate),
   controllerWrapper(ctrl.addOperations)
 );
 
 transactionsRouter.delete(
   "/:operationType/:operationId",
+  controllerWrapper(authenticate),
   controllerWrapper(ctrl.deleteOperationFromTransactions)
 );
-
-// transactionsRouter.patch('/expenses', controllerWrapper(ctrl.addExpense));
 
 module.exports = transactionsRouter;

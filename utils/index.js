@@ -1,9 +1,11 @@
 const findTransactions = require("./findTransactions");
-const addTransaction = require("./addTransaction");
+const addOperation = require("./addOperation");
 const getTransactions = require("./getTransactions");
+const sendMail = require("./sendMail");
 
 module.exports = {
-    findTransactions,
-    addTransaction,
-    getTransactions,
-}
+  findTransactions,
+  addOperation,
+  getTransactions,
+  sendMail,
+};
