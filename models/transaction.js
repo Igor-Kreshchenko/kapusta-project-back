@@ -86,33 +86,11 @@ const TransactionSchema = Schema(
 
 const Transaction = model("transaction", TransactionSchema);
 
-const joiSchemaAddIncome = Joi.object({
+const joiSchemaAddOperation = Joi.object({
   id: Joi.string(),
   amount: Joi.number().min(0).required(),
   date: Joi.string().pattern(dateRegexp).required(),
-  category: Joi.string().valid("ЗП", "Доп. доход").required(),
-  description: Joi.string().pattern(descriptionRegexp).required(),
-});
-
-const joiSchemaAddExpenses = Joi.object({
-  id: Joi.string(),
-  amount: Joi.number().min(0).required(),
-  date: Joi.string().pattern(dateRegexp).required(),
-  category: Joi.string()
-    .valid(
-      "Транспорт",
-      "Продукты",
-      "Здоровье",
-      "Алкоголь",
-      "Развлечения",
-      "Всё для дома",
-      "Техника",
-      "Коммуналка, связь",
-      "Спорт, хобби",
-      "Образование",
-      "Прочее"
-    )
-    .required(),
+  category: Joi.string().required(),
   description: Joi.string().pattern(descriptionRegexp).required(),
 });
 
@@ -122,7 +100,6 @@ const joiSchemaRenewBalance = Joi.object({
 
 module.exports = {
   Transaction,
-  joiSchemaAddIncome,
-  joiSchemaAddExpenses,
+  joiSchemaAddOperation,
   joiSchemaRenewBalance,
 };

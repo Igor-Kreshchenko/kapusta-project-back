@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { Unauthorized } = require("http-errors");
-
 const { User } = require("../models");
-
 const { JWT_SECRET_KEY } = process.env;
 
 const authenticate = async (req, _, next) => {

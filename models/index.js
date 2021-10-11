@@ -8,8 +8,7 @@ const {
 
 const {
   Transaction,
-  joiSchemaAddIncome,
-  joiSchemaAddExpenses,
+  joiSchemaAddOperation,
   joiSchemaRenewBalance,
 } = require("./transaction");
 
@@ -20,7 +19,6 @@ module.exports = {
   joiSchemaChangeUser,
   joiSchemaVerifyEmail,
   Transaction,
-  joiSchemaAddIncome,
-  joiSchemaAddExpenses,
+  joiSchemaAddOperation,
   joiSchemaRenewBalance,
 };
