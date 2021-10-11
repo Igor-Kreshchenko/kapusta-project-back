@@ -19,16 +19,15 @@ const getOperations = async (req, res, _) => {
         month = parseInt(req.query.month);
         year = parseInt(req.query.year);
     };
-    const {_id: userId} = req.user;
+    const { _id: userId } = req.user;
+    const userTransactions = await findTransactions(userId);
+    const data = getTransactions(operationType, month, year, userTransactions);
 
-  const userTransactions = await findTransactions(userId, res);
-  const data = getTransactions(operationType, month, year, userTransactions);
-
-  res.json({
-    status: "Success",
-    code: 200,
-    data,
-  });
+    res.json({
+        status: "Success",
+        code: 200,
+        data,
+    });
 };
 
 module.exports = getOperations;
