@@ -14,6 +14,12 @@ const {
 const operationsAddValidation = joiValidation(joiSchemaAddOperation);
 const renewBalanceValidation = joiValidation(joiSchemaRenewBalance);
 
+transactionsRouter.get(
+  "/balance",
+  controllerWrapper(authenticate),
+  controllerWrapper(ctrl.getBalance)
+);
+
 transactionsRouter.patch(
   "/balance",
   renewBalanceValidation,

@@ -98,8 +98,13 @@ const joiSchemaRenewBalance = Joi.object({
   balance: Joi.number().required(),
 });
 
+const joiSchemaGetBalance = Joi.object({
+  balance: Joi.number().required(),
+});
+
 module.exports = {
   Transaction,
   joiSchemaAddOperation,
   joiSchemaRenewBalance,
+  joiSchemaGetBalance,
 };
