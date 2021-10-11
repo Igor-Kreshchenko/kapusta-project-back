@@ -45,7 +45,19 @@
             "name": "operationType",
             "required": true,
             "type": "string",
-            "description": "operation type ('income' or 'expenses')"
+            "description": "operation type ('income' or 'expense')"
+          },
+          {
+            "in": "query",
+            "name": "year",
+            "type": "string",
+            "description": "year of the request operations"
+          },
+          {
+            "in": "query",
+            "name": "month",
+            "type": "string",
+            "description": "month of the request operations"
           }
         ],
         "security": [{ "Bearer": [] }],
