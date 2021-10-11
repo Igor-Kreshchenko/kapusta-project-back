@@ -120,9 +120,14 @@ const joiSchemaRenewBalance = Joi.object({
   balance: Joi.number().required(),
 });
 
+const joiSchemaGetBalance = Joi.object({
+  balance: Joi.number().required(),
+});
+
 module.exports = {
   Transaction,
   joiSchemaAddIncome,
   joiSchemaAddExpenses,
   joiSchemaRenewBalance,
+  joiSchemaGetBalance,
 };

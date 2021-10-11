@@ -11,6 +11,7 @@ const {
   joiSchemaAddIncome,
   joiSchemaAddExpenses,
   joiSchemaRenewBalance,
+  joiSchemaGetBalance,
 } = require("./transaction");
 
 module.exports = {
@@ -23,4 +24,5 @@ module.exports = {
   joiSchemaAddIncome,
   joiSchemaAddExpenses,
   joiSchemaRenewBalance,
+  joiSchemaGetBalance,
 };
