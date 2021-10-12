@@ -7,7 +7,7 @@ const { User } = require("../../models");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-exports.googleAuth = async (req, res) => {
+exports.google = async (req, res) => {
   const stringifiedParams = queryString.stringify({
     client_id: process.env.GOOGLE_CLIENT_ID,
     redirect_uri: `${process.env.BASE_URL}/auth/google-redirect`,
