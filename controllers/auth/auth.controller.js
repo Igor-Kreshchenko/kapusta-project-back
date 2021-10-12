@@ -3,7 +3,7 @@ const axios = require("axios");
 const { findByEmail, updateToken } = require("../../repositories/users");
 const HttpCode = require("../../helpers/constants");
 const { User } = require("../../models");
-const URL = require("url");
+// const URL = require("url");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -48,16 +48,16 @@ exports.googleRedirect = async (req, res) => {
     },
   });
 
-  let loginUser = await User.findByEmail({ email: userData.data.email });
-  if (!loginUser || !loginUser.FRONTEND_URL) {
-    return res.status(HttpCode.UNAUTHORIZED).json({
-      status: "error",
-      code: HttpCode.UNAUTHORIZED,
-      responseBody: {
-        message: "You should register first",
-      },
-    });
-  }
+  // let loginUser = await User.findByEmail({ email: userData.data.email });
+  // if (!loginUser || !loginUser.FRONTEND_URL) {
+  //   return res.status(HttpCode.UNAUTHORIZED).json({
+  //     status: "error",
+  //     code: HttpCode.UNAUTHORIZED,
+  //     responseBody: {
+  //       message: "You should register first",
+  //     },
+  //   });
+  // }
 
   //   const payload = loginUser.id;
   //   const accessToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" });

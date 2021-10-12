@@ -2,10 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ctrl = require("../../controllers/auth");
 const tryCatchWrapper = require("../../helpers/try-catch-wrapper");
-const {
-  googleAuth,
-  googleRedirect,
-} = require("../../controllers/auth/auth.controller");
+const { googleAuth, googleRedirect } = require("../../controllers/auth");
 
 const { joiUserSchema, joiSchemaVerifyEmail } = require("../../models");
 const {
