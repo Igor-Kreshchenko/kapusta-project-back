@@ -15,17 +15,25 @@ router.post(
   userValidationMiddleware,
   controllerWrapper(ctrl.signup)
 );
-router.get(
-  "/verify/:verificationToken",
-  controllerWrapper(ctrl.verifyEmailByToken)
-);
-router.post(
-  "/verify",
-  joiValidation(joiSchemaVerifyEmail),
-  controllerWrapper(ctrl.verifyEmailByPostRequest)
-);
+// router.get(
+//   "/verify/:verificationToken",
+//   controllerWrapper(ctrl.verifyEmailByToken)
+// );
+// router.post(
+//   "/verify",
+//   joiValidation(joiSchemaVerifyEmail),
+//   controllerWrapper(ctrl.verifyEmailByPostRequest)
+// );
 router.post("/login", userValidationMiddleware, controllerWrapper(ctrl.login));
-router.get("/logout", controllerWrapper(authenticate), controllerWrapper(ctrl.logout));
-router.get('/current',controllerWrapper(authenticate), controllerWrapper(ctrl.getCurrent));
+router.get(
+  "/logout",
+  controllerWrapper(authenticate),
+  controllerWrapper(ctrl.logout)
+);
+router.get(
+  "/current",
+  controllerWrapper(authenticate),
+  controllerWrapper(ctrl.getCurrent)
+);
 
 module.exports = router;
