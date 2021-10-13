@@ -36,11 +36,13 @@ router.get(
 
 router.get(
   "/google",
+
   controllerWrapper(authenticate),
   controllerWrapper(ctrl.google)
 );
 router.get(
   "/google-redirect",
+
   controllerWrapper(authenticate),
   controllerWrapper(ctrl.googleRedirect)
 );
