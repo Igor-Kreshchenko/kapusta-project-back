@@ -1,11 +1,11 @@
 const queryString = require("query-string");
 const axios = require("axios");
-const { findByEmail, updateToken } = require("../../repositories/users");
-const HttpCode = require("../../helpers/constants");
-const { User } = require("../../models");
+// const { findByEmail, updateToken } = require("../../repositories/users");
+// const HttpCode = require("../../helpers/constants");
+// const { User } = require("../../models");
 // const URL = require("url");
-const jwt = require("jsonwebtoken");
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+// const jwt = require("jsonwebtoken");
+// const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 exports.google = async (req, res) => {
   const stringifiedParams = queryString.stringify({
@@ -59,15 +59,15 @@ exports.googleRedirect = async (req, res) => {
   //   });
   // }
 
-  //   const payload = loginUser.id;
-  //   const accessToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" });
-  //   const refreshToken = await User.updateToken(payload, accessToken);
+  // const payload = loginUser.id;
+  // const accessToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" });
+  // const refreshToken = await User.updateToken(payload, accessToken);
 
   return res.redirect(
     `${process.env.FRONTEND_URL}?email=${userData.data.email}`
   );
 
-  //   return res.redirect(
-  //     `${process.env.FRONTEND_URL}/google-redirect/?accessToken=${accessToken}&refreshToken=${refreshToken}`
-  //   );
+  // return res.redirect(
+  //   `${process.env.FRONTEND_URL}/google-redirect/?accessToken=${accessToken}&refreshToken=${refreshToken}`
+  // );
 };

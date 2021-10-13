@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const ctrl = require("../../controllers/auth");
-const tryCatchWrapper = require("../../helpers/try-catch-wrapper");
-// const { google, googleRedirect } = require("../../controllers/auth");
+// const tryCatchWrapper = require("../../helpers/try-catch-wrapper");
+// const  google = require("../../controllers/auth/auth.controller");
 
 const { joiUserSchema, joiSchemaVerifyEmail } = require("../../models");
 const {
@@ -34,8 +34,15 @@ router.get(
   controllerWrapper(ctrl.logout)
 );
 
-router.get("/google", tryCatchWrapper(ctrl.google));
-
-router.get("/google-redirect", tryCatchWrapper(ctrl.googleRedirect));
+router.get(
+  "/google",
+  controllerWrapper(authenticate),
+  controllerWrapper(ctrl.google)
+);
+router.get(
+  "/google-redirect",
+  controllerWrapper(authenticate),
+  controllerWrapper(ctrl.googleRedirect)
+);
 
 module.exports = router;
