@@ -22,17 +22,16 @@ const signup = async (req, res) => {
   }
 
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-  // const verifyToken = v4();
+  const verifyToken = v4();
 
-  // const data = {
-  //   to: email,
-  //   subject: "Подтверждение регистрации",
-  //   html: `<a href="http://localhost:4000/api/users/verify/${verifyToken}">Подтверджение регистрации</a>`,
-  // };
+  const data = {
+    to: email,
+    subject: "Подтверждение регистрации",
+    html: `<a href="http://localhost:4000/api/users/verify/${verifyToken}">Подтверджение регистрации</a>`,
+  };
 
-  // Добавить verifyToken в скобки
-  const newUser = await create({ email, password: hashPassword });
-  // await sendMail(data);
+  const newUser = await create({ email, password: hashPassword, verifyToken });
+  await sendMail(data);
 
   const newTransaction = await transactions.create(newUser._id);
 

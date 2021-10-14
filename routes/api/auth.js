@@ -15,15 +15,15 @@ router.post(
   userValidationMiddleware,
   controllerWrapper(ctrl.signup)
 );
-// router.get(
-//   "/verify/:verificationToken",
-//   controllerWrapper(ctrl.verifyEmailByToken)
-// );
-// router.post(
-//   "/verify",
-//   joiValidation(joiSchemaVerifyEmail),
-//   controllerWrapper(ctrl.verifyEmailByPostRequest)
-// );
+router.get(
+  "/verify/:verificationToken",
+  controllerWrapper(ctrl.verifyEmailByToken)
+);
+router.post(
+  "/verify",
+  joiValidation(joiSchemaVerifyEmail),
+  controllerWrapper(ctrl.verifyEmailByPostRequest)
+);
 router.post("/login", userValidationMiddleware, controllerWrapper(ctrl.login));
 router.get(
   "/logout",
