@@ -27,7 +27,7 @@ const signup = async (req, res) => {
   const data = {
     to: email,
     subject: "Подтверждение регистрации",
-    html: `<a href="http://localhost:4000/api/users/verify/${verifyToken}">Подтверджение регистрации</a>`,
+    html: `<a href="http://localhost:3000/verify/${verifyToken}">Ссылка на локалхост Верификацию</a><br/><a href="https://kapusta-app.netlify.app/verify/${verifyToken}">Ссылка на нетлифай Верификацию</a>`,
   };
 
   const newUser = await create({ email, password: hashPassword, verifyToken });
