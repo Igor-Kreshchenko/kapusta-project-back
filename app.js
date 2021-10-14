@@ -18,9 +18,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 app.use(boolParser());
-app.use(helmet("/api/users"), usersRouter);
-app.use(helmet("/api/transactions"), transactionsRouter);
-app.use(helmet("/swagger"), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/users", usersRouter);
+app.use("/api/transactions", transactionsRouter);
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((_, res) => {
   res.status(404).json({ status: "error", code: 404, message: "Not found" });
