@@ -1,7 +1,9 @@
 const { Transaction } = require("../models");
+const { v4 } = require("uuid");
 
 const addOperation = async (body, userTransactions, operationType) => {
   const { _id: transactionId, balance, expenses, income } = userTransactions;
+  body.id = v4();
   const amount = body.amount;
 
   if (operationType === "income") {
