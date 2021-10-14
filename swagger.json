@@ -1003,6 +1003,11 @@
                 "type": "string",
                 "description": "Operation description",
                 "example": "Моя зарплата"
+              },
+              "id": {
+                "type": "string",
+                "description": "Generated identificator",
+                "example": "f0556a53-f6db-4b6c-b86a-beca813cfa5f"
               }
             }
           }
