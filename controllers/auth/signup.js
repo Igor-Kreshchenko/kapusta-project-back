@@ -35,7 +35,6 @@ const signup = async (req, res) => {
 
   await sendMail(data);
 
-
   return res.status(HttpCode.CREATED).json({
     status: "created",
     contentType: "application/json",
