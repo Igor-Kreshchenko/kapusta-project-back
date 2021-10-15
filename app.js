@@ -18,6 +18,9 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(boolParser());
 app.use("/api/users", usersRouter);
+app.use("/api/link", (req, res) => {
+  res.sendFile("./public/link.html");
+});
 app.use("/api/transactions", transactionsRouter);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

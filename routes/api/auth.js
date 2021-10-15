@@ -15,6 +15,8 @@ router.post(
   userValidationMiddleware,
   controllerWrapper(ctrl.signup)
 );
+router.get("/google", controllerWrapper(ctrl.googleAuth));
+router.get("/google-redirect", controllerWrapper(ctrl.googleRedirect));
 router.get(
   "/verify/:verificationToken",
   controllerWrapper(ctrl.verifyEmailByToken)
