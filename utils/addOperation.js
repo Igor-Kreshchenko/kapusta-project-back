@@ -8,7 +8,7 @@ const addOperation = async (body, userTransactions, operationType) => {
 
   if (operationType === "income") {
     const newBalance = +balance + +amount;
-    const newTransactions = [...income, body];
+    const newTransactions = [body, ...income];
 
     await Transaction.findByIdAndUpdate(transactionId, {
       balance: newBalance,
@@ -16,7 +16,7 @@ const addOperation = async (body, userTransactions, operationType) => {
     });
   } else if (operationType === "expense") {
     const newBalance = +balance - +amount;
-    const newTransactions = [...expenses, body];
+    const newTransactions = [body, ...expenses];
 
     await Transaction.findByIdAndUpdate(transactionId, {
       balance: newBalance,
