@@ -1,8 +1,6 @@
 const queryString = require("query-string")
 const axios = require("axios")
-//const URL = require("url")
 const { findByEmail, updateToken } = require("../../repositories/users");
-const HttpCode = require("../../helpers/constants");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -23,8 +21,8 @@ const googleRedirect = async (req, res) => {
             code
         }
     })
-    console.log('tokenData:')
-    console.log(tokenData)
+    //console.log('tokenData:')
+    //console.log(tokenData.data)
     const userData = await axios({
         url: "https://www.googleapis.com/oauth2/v2/userinfo",
         method: "get",
@@ -32,58 +30,28 @@ const googleRedirect = async (req, res) => {
             Authorization: `Bearer ${tokenData.data.access_token}`
         }
     })
-    console.log('userData:')
-    console.log(userData)
-    /*якщо юзера не існує, реєструємо; інакше пускаємо
-    також створюємо токен (accessToken)
+    //console.log('userData:')
+    //console.log(userData.data)
+
+    /*якщо юзера не існує, то реєструємо його, а інакше пускаємо;
+    також створюємо токен (accessToken) і перенаправляємо:
     return res.redirect(
         `${process.env.FRONTEND_URL}/google-redirect/?accessToken=${accessToken}`
     )*/
     const user = await findByEmail(userData.data.email)
-    console.log('user:')
-    console.log(user)
-    const payload = { id: user.id };
-    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" });
-
-    await updateToken(user.id, token);
-
-    /*await axios({
-        url: `${process.env.FRONTEND_URL}/transactions`,
-        method: "get",
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })*/
-
-    /*return res.redirect(
-        `${process.env.FRONTEND_URL}/google-redirect/?accessToken=${token}`
-    )*/
-
-    /*return res.redirect(
-        `${process.env.FRONTEND_URL}/google-redirect/?access_token=${token}`
-    )*/
-
-    /*return res.status(HttpCode.OK).json({
-        status: "OK",
-        contentType: "application/json",
-        code: HttpCode.OK,
-        responseBody: {
-            token,
-            user: {
-                email: user.email,
-            },
-        },
-    });*/
-    //для прикладу візьмемо замість токена пошту юзера
-    /*return res.redirect(
-        `${process.env.FRONTEND_URL}/?email=${userData.data.email}`
-    )*/
+    //console.log('user:')
+    //console.log(user)
+    if (!user) {
+        return res.redirect(
+            `${process.env.FRONTEND_URL}/signup`
+        )
+    }
+    const payload = { id: user.id }
+    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" })
+    await updateToken(user.id, token)
     return res.redirect(
         `${process.env.FRONTEND_URL}/transactions`
     )
-    /*return res.redirect(
-        "https://www.google.com"
-    )*/
  }
 
 module.exports = googleRedirect
