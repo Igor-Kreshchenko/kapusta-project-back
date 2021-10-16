@@ -31,9 +31,9 @@ const signup = async (req, res) => {
   };
 
   const newUser = await create({ email, password: hashPassword, verifyToken });
-  await sendMail(data);
-
   const newTransaction = await transactions.create(newUser._id);
+
+  await sendMail(data);
 
   return res.status(HttpCode.CREATED).json({
     status: "created",
