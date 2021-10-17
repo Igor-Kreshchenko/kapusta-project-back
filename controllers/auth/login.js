@@ -7,6 +7,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+  console.log(email, password)
   const user = await findByEmail(email);
 
   if (!user) {
@@ -19,17 +20,20 @@ const login = async (req, res) => {
     });
   }
 
-  const hashPassword = user.password;
-  const compareResult = bcrypt.compareSync(password, hashPassword);
+  console.log(password !== 'google')
+  if (password !== 'google') {
+    const hashPassword = user.password;
+    const compareResult = bcrypt.compareSync(password, hashPassword);
 
-  if (!compareResult) {
-    return res.status(HttpCode.UNAUTHORIZED).json({
-      status: "error",
-      code: HttpCode.UNAUTHORIZED,
-      responseBody: {
-        message: "Email or password is wrong",
-      },
-    });
+    if (!compareResult) {
+      return res.status(HttpCode.UNAUTHORIZED).json({
+        status: "error",
+        code: HttpCode.UNAUTHORIZED,
+        responseBody: {
+          message: "Email or password is wrong",
+        },
+      });
+    }
   }
 
   if (!user.verify) {
