@@ -4,7 +4,7 @@
 
 ## MERN stack complete: full stack app
 
-MERN Web server application was built with front-end, back-end and database components.Completed tasks:
+MERN Web server application was built with front-end, back-end and database components. Completed tasks:
 
 - user registration with email and password
 
@@ -38,7 +38,7 @@ MERN Web server application was built with front-end, back-end and database comp
 
 - Kate Podolsky
 
-### npm commands
+### npm packages
 
 @sendgrid/mail | bcrypt | bcryptjs | cloudinary | cors | cross-env | dotenv | eslint-config-prettier |
 eslint-plugin-json | express | express-query-boolean | express-rate-limit | gravatar | helmet |
