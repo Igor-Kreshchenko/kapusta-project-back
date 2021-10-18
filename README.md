@@ -26,7 +26,7 @@ MERN Web server application was built with front-end, back-end and database comp
 
 ## Backend developers
 
-- Oleksandra-Shelest
+- Oleksandra Shelest
 
 - Kate Podolsky
 
