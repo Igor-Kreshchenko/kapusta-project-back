@@ -26,17 +26,27 @@ MERN Web server application was built with front-end, back-end and database comp
 
 ## Backend developers
 
-- Igor Kreshchenko
+-Oleksandra-Shelest
 
-- Oleksii Patsiuk
+- Kate Podolsky
+
+- Nina Motorna
+
+- Tetiana Kankina
+
+- Yana Horbachova
 
 - Aleksandra Knott
 
+- Igor Kreshchenko
+
+- Aleksandrs Barkancevs
+
 - Denys Kodak
 
-- Oleg Shevchenko
+- Oleksii Patsiuk
 
-- Kate Podolsky
+- Oleg Shevchenko
 
 ### npm packages
 
