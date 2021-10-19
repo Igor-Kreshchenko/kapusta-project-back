@@ -24,7 +24,7 @@ MERN Web server application was built with front-end, back-end and database comp
 
 - get all user's transactions and their total balance
 
-## Backend developers
+## Developers
 
 - Oleksandra Shelest
 
